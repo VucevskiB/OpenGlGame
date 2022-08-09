@@ -1,0 +1,23 @@
+# ninja log v5
+26	1223	6817741752226191	CMakeFiles/OpenGLPrj.dir/vendor/glad/src/glad.c.obj	f82f68772c7f5535
+40	1305	6817741752565291	vendor/glfw/src/CMakeFiles/glfw.dir/init.c.obj	f35c5be0fe3b8469
+2	1356	6817741753363161	CMakeFiles/OpenGLPrj.dir/src/Camera.cpp.obj	7e2f23a589c6252
+9	2021	6817741759887349	CMakeFiles/OpenGLPrj.dir/src/Shader.cpp.obj	13152d766c07011
+1306	2062	6817741760477424	vendor/glfw/src/CMakeFiles/glfw.dir/monitor.c.obj	a6e99010165dbd6a
+12	2278	6817741762597962	CMakeFiles/OpenGLPrj.dir/src/Tile.cpp.obj	74e10419e1d2d383
+1358	2303	6817741762427863	vendor/glfw/src/CMakeFiles/glfw.dir/vulkan.c.obj	907d9471be0f7aad
+1233	2307	6817741763027825	vendor/glfw/src/CMakeFiles/glfw.dir/context.c.obj	bf6f4f3a61fce9ec
+14	2350	6817741763158154	CMakeFiles/OpenGLPrj.dir/src/main.cpp.obj	d97c6661cc4191a7
+2062	2799	6817741767707056	vendor/glfw/src/CMakeFiles/glfw.dir/win32_monitor.c.obj	fcb76c1b5acee951
+2303	2897	6817741768852212	vendor/glfw/src/CMakeFiles/glfw.dir/win32_joystick.c.obj	f2e742ab2b0f0382
+2279	2904	6817741768846763	vendor/glfw/src/CMakeFiles/glfw.dir/window.c.obj	8b6becd913b01987
+2021	2921	6817741768957327	vendor/glfw/src/CMakeFiles/glfw.dir/input.c.obj	a098197cc820507f
+2337	2924	6817741769157365	vendor/glfw/src/CMakeFiles/glfw.dir/win32_init.c.obj	facffb9869735a69
+2351	3214	6817741770557324	vendor/glfw/src/CMakeFiles/glfw.dir/win32_time.c.obj	17506e3af0bcca49
+2799	3327	6817741773295596	vendor/glfw/src/CMakeFiles/glfw.dir/win32_thread.c.obj	634d7923784a311b
+2910	3463	6817741774603992	vendor/glfw/src/CMakeFiles/glfw.dir/egl_context.c.obj	869a43f5b5ef4493
+2925	3470	6817741774703718	vendor/glfw/src/CMakeFiles/glfw.dir/wgl_context.c.obj	fe6bdedbdb098be3
+2897	3473	6817741774723666	vendor/glfw/src/CMakeFiles/glfw.dir/win32_window.c.obj	6dab4d410010d4f8
+2921	3490	6817741774913477	vendor/glfw/src/CMakeFiles/glfw.dir/osmesa_context.c.obj	d423b49c913bfb71
+3490	3916	6817741777221578	vendor/glfw/src/glfw3.lib	17357f92fd4e6f1
+3917	4912	6817741785913215	OpenGLPrj/bin/OpenGLPrj.exe	c580ba0bbea70c56
