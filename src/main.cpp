@@ -24,7 +24,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-static Camera camera(glm::vec3(0.0f, 5.0f, 5.0f));
+static Camera camera(glm::vec3(0.0f, 10, 10));
 static float lastX = SCR_WIDTH / 2.0f;
 static float lastY = SCR_HEIGHT / 2.0f;
 static bool firstMouse = true;
@@ -104,14 +104,14 @@ int main() {
   // organized)
   // -----------------------------------------------------------------------------
   unsigned int diffuseMap =
-      loadTexture((texture_location + "container2.png").c_str());
+      loadTexture((texture_location + "border.png").c_str());
 
   // shader configuration
   // --------------------
   lightingShader.use();
   lightingShader.setInt("material.diffuse", 0);
 
-  Tile tile =  Tile(glm::vec3(0,0,0),diffuseMap,lightingShader,"../res/models/Lowpoly_tree_sample.obj");
+  Tile tile =  Tile(glm::vec3(0,0,0),diffuseMap,lightingShader,"../res/models/cube_final.obj");
   //Tile tile2 = Tile(glm::vec3(1, 0, 0), diffuseMap, lightingShader, "");
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

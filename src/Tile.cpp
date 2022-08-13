@@ -55,7 +55,7 @@ Tile::Tile(glm::vec3 position, unsigned int texture, Shader& shader, const char*
 
 	
 	std::vector<Vertex> mesh = loadOBJ(objFile);
-	this->meshes.push_back(new Mesh(mesh.data(), mesh.size(), NULL, 0, glm::vec3(1.f, 0.f, 0.f),
+	this->meshes.push_back(new Mesh(mesh.data(), mesh.size(), NULL, 0, glm::vec3(0.f, 0.f, 0.f),
 		glm::vec3(0.f),
 		glm::vec3(0.f),
 		glm::vec3(1.f)));
