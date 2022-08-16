@@ -38,6 +38,11 @@ static float lastFrame = 0.0f;
 // lighting
 static glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
+//Game Objects
+TileMap tileMap = TileMap();
+
+
+
 int main() {
   // glfw: initialize and configure
   // ------------------------------
@@ -106,13 +111,20 @@ int main() {
   unsigned int diffuseMap =
       loadTexture((texture_location + "border.png").c_str());
 
+  unsigned int containerTexture =
+      loadTexture((texture_location + "container2.png").c_str());
+
   // shader configuration
   // --------------------
   lightingShader.use();
   lightingShader.setInt("material.diffuse", 0);
 
-  Tile tile =  Tile(glm::vec3(0,0,0),diffuseMap,lightingShader,"../res/models/cube_final.obj");
-  //Tile tile2 = Tile(glm::vec3(1, 0, 0), diffuseMap, lightingShader, "");
+  Tile tile = Tile(glm::vec3(0, 0, 0), diffuseMap, lightingShader, "../res/models/cube_final.obj");
+
+  Tile tile2 =  Tile(glm::vec3(2,2,0), containerTexture,lightingShader,"../res/models/cube_final.obj");
+
+  tileMap.AddTile(tile, glm::vec3(0, 0, 0));
+  tileMap.AddTile(tile2, glm::vec3(2, 2, 0));
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -136,17 +148,6 @@ int main() {
 
     // be sure to activate shader when setting uniforms/drawing objects
     lightingShader.use();
-    lightingShader.setVec3("light.position", lightPos);
-    lightingShader.setVec3("viewPos", camera.Position);
-
-    // light properties
-    lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-    lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-    lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
-    // material properties
-    lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-    lightingShader.setFloat("material.shininess", 64.0f);
 
     // view/projection transformations
     glm::mat4 projection =
@@ -157,33 +158,10 @@ int main() {
     lightingShader.setMat4("projection", projection);
     lightingShader.setMat4("view", view);
 
-    // world transformation
-    //glm::mat4 model = glm::mat4(1.0f);
-    //lightingShader.setMat4("model", model);
 
-    // bind diffuse map
-    //glActiveTexture(GL_TEXTURE0);
-    //glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    tileMap.Draw();
 
-    // render the cube
-    //glBindVertexArray(cubeVAO);
-    //glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    tile.Draw();
-
-    // also draw the lamp object
-    /*
-    lampShader.use();
-    lampShader.setMat4("projection", projection);
-    lampShader.setMat4("view", view);
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, lightPos);
-    model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-    lampShader.setMat4("model", model);
-
-    glBindVertexArray(lightVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    */
+    
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
     // etc.)
@@ -194,7 +172,7 @@ int main() {
 
   // optional: de-allocate all resources once they've outlived their purpose:
   // ------------------------------------------------------------------------
-  tile.Realese();
+  tileMap.ReleaseData();
 
   // glfw: terminate, clearing all previously allocated GLFW resources.
   // ------------------------------------------------------------------
