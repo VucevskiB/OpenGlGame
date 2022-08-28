@@ -123,10 +123,13 @@ int main() {
 
   Tile tile2 =  Tile(glm::vec3(2,2,0), containerTexture,lightingShader,"../res/models/cube_final.obj");
 
-  tileMap.AddTile(tile, glm::vec3(0, 0, 0));
-  tileMap.AddTile(tile2, glm::vec3(2, 2, 0));
+  //tileMap.AddTile(tile, glm::vec3(0, 0, 0));
+  tileMap.AddTile(tile2, glm::vec3(0, 0, 0));
+
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  tileMap.GenerateMap();
 
   // render loop
   // -----------

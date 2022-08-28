@@ -62,6 +62,7 @@ class Tile {
 public:
     glm::vec3 Position;
 
+    Tile();
 
     Tile(glm::vec3 position,unsigned int texture, Shader& shader, const char* objFile);
     void Draw();
