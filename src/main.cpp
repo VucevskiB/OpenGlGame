@@ -4,7 +4,7 @@
 
 #include <Camera.hpp>
 #include <Shader.hpp>
-#include <Tile.hpp>
+#include <Block.hpp>
 
 #include <iostream>
 #include <string>
@@ -119,9 +119,19 @@ int main() {
   lightingShader.use();
   lightingShader.setInt("material.diffuse", 0);
 
-  Tile tile = Tile(glm::vec3(0, 0, 0), diffuseMap, lightingShader, "../res/models/cube_final.obj");
+  std::vector<Vertex> mesh_data = loadOBJ("../res/models/cube_final.obj");
 
-  Tile tile2 =  Tile(glm::vec3(2,2,0), containerTexture,lightingShader,"../res/models/cube_final.obj");
+  Quad quad = Quad();
+
+  Mesh cubeMesh = Mesh(quad.getVertices(), quad.getNrOfVertices(), quad.getIndices(), quad.getNrOfIndices(), glm::vec3(0.f, 0.f, 0.f),
+      glm::vec3(0.f),
+      glm::vec3(0.f),
+      glm::vec3(1.f));
+
+
+  Block tile = Block(diffuseMap, lightingShader, cubeMesh);
+
+  Block tile2 =  Block(containerTexture,lightingShader, cubeMesh);
 
   //tileMap.AddTile(tile, glm::vec3(0, 0, 0));
   tileMap.AddTile(tile2, glm::vec3(0, 0, 0));

@@ -4,7 +4,7 @@ TileMap::TileMap() {
 
 }
 
-void TileMap::AddTile(Tile tile, glm::vec3 position) {
+void TileMap::AddTile(Block tile, glm::vec3 position) {
 	tile.SetPosition(position);
 	this->tiles.push_back(tile);
 
@@ -12,6 +12,10 @@ void TileMap::AddTile(Tile tile, glm::vec3 position) {
 }
 
 void TileMap::Draw() {
+
+	block_tile.SetPosition(glm::vec3(1.0f,1.0f,1.0f));
+	block_tile.Draw();
+	/*
 	for (int i = 0; i < tiles_position.size(); i++) {
 		for (int j = 0; j < 10; j++) {
 			glm::vec3 pos = tiles_position[i];
@@ -25,6 +29,7 @@ void TileMap::Draw() {
 		}
 		
 	}
+	*/
 }
 
 void TileMap::GenerateMap() {

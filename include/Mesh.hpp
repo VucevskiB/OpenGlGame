@@ -18,7 +18,6 @@ private:
 	GLuint* indexArray;
 	unsigned nrOfIndices;
 
-	GLuint VAO;
 	GLuint VBO;
 	GLuint EBO;
 
@@ -37,6 +36,11 @@ private:
 	void updateModelMatrix();
 
 public:
+	GLuint VAO;
+
+
+	Mesh();
+
 	Mesh(
 		Vertex* vertexArray,
 		const unsigned& nrOfVertices,

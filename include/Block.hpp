@@ -1,5 +1,5 @@
-#ifndef TILE_H
-#define TILE_H
+#ifndef BLOCK_H
+#define BLOCK_H
 
 #pragma once
 
@@ -58,13 +58,13 @@ const float vertices[] = {
     -0.5f, 0.5f,  -0.5f,   0.0f,  1.0f,  0.0f,       0.0f,  1.0f };
 
 
-class Tile {
+class Block {
 public:
     glm::vec3 Position;
 
-    Tile();
+    Block();
 
-    Tile(glm::vec3 position,unsigned int texture, Shader& shader, const char* objFile);
+    Block(unsigned int texture, Shader& shader, Mesh& mesh);
     void Draw();
     void Realese();
     void initVAO();
@@ -73,10 +73,10 @@ public:
 
 private:
     unsigned int texture;
-    Shader* shader;
-    GLuint VBO, VAO,  EBO;
 
-    std::vector<Mesh*> meshes;
+    Shader* shader;
+
+    Mesh* cubeMesh;
 
 };
 

@@ -1,15 +1,15 @@
 #pragma once
-#include <Tile.hpp>
+#include <Block.hpp>
 #include "PerlinNoise.hpp"
 
 #include <vector>
 
 class TileMap {
 private:
-	std::vector<Tile> tiles;
+	std::vector<Block> tiles;
 	std::vector<glm::vec3> tiles_position;
 
-	Tile block_tile;
+	Block block_tile;
 
 	const siv::PerlinNoise::seed_type seed = 123456u;
 	const siv::PerlinNoise perlin{ seed };
@@ -21,7 +21,7 @@ public:
 
 	TileMap();
 
-	void AddTile(Tile tile, glm::vec3 position);
+	void AddTile(Block tile, glm::vec3 position);
 
 	void Draw();
 

@@ -49,8 +49,11 @@ void Mesh::updateModelMatrix()
 	this->ModelMatrix = glm::rotate(this->ModelMatrix, glm::radians(this->rotation.x), glm::vec3(1.f, 0.f, 0.f));
 	this->ModelMatrix = glm::rotate(this->ModelMatrix, glm::radians(this->rotation.y), glm::vec3(0.f, 1.f, 0.f));
 	this->ModelMatrix = glm::rotate(this->ModelMatrix, glm::radians(this->rotation.z), glm::vec3(0.f, 0.f, 1.f));
-	this->ModelMatrix = glm::translate(this->ModelMatrix, this->position - this->origin);
+	this->ModelMatrix = glm::translate(this->ModelMatrix, this->position);
 	this->ModelMatrix = glm::scale(this->ModelMatrix, this->scale);
+}
+Mesh::Mesh() {
+
 }
 
 Mesh::Mesh(
@@ -152,8 +155,8 @@ Mesh::~Mesh() {
 		glDeleteBuffers(1, &this->EBO);
 	}
 
-	delete[] this->vertexArray;
-	delete[] this->indexArray;
+	//delete[] this->vertexArray;
+	//delete[] this->indexArray;
 }
 
 void Mesh::setPosition(const glm::vec3 position)
@@ -204,12 +207,12 @@ void Mesh::render(Shader* shader)
 	//this->updateUniforms(shader);
 
 
-	shader->use();
+	
 	shader->setMat4("model", ModelMatrix);
 
 
 	//Bind VAO
-	glBindVertexArray(this->VAO);
+
 
 	//RENDER
 	if (this->nrOfIndices == 0)
@@ -218,8 +221,6 @@ void Mesh::render(Shader* shader)
 		glDrawElements(GL_TRIANGLES, this->nrOfIndices, GL_UNSIGNED_INT, 0);
 
 	//Cleanup
-	glBindVertexArray(0);
-	glUseProgram(0);
-	glActiveTexture(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glActiveTexture(0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }

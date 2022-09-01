@@ -58,7 +58,7 @@ add_definitions(-DGLFW_INCLUDE_NONE
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
                                ${PROJECT_SHADERS} ${PROJECT_TEXTURES} ${PROJECT_CONFIGS}
-                               ${VENDORS_SOURCES} "src/Tile.cpp" "include/Tile.hpp" "include/OBJLoader.hpp" "include/Vertex.hpp" "include/Mesh.hpp" "include/Primitives.hpp" "include/OBJ_Loader.h" "src/Primitives.cpp" "src/Mesh.cpp" "include/TileMap.hpp" "include/PerlinNoise.hpp" "src/TileMap.cpp" "include/Model.hpp")
+                               ${VENDORS_SOURCES} "src/Block.cpp" "include/Block.hpp" "include/OBJLoader.hpp" "include/Vertex.hpp" "include/Mesh.hpp" "include/Primitives.hpp" "include/OBJ_Loader.h" "src/Primitives.cpp" "src/Mesh.cpp" "include/TileMap.hpp" "include/PerlinNoise.hpp" "src/TileMap.cpp" "include/Model.hpp" "include/Chunk.hpp")
 target_link_libraries(${PROJECT_NAME}
 		      glfw
                       ${GLFW_LIBRARIES} ${GLAD_LIBRARIES}
