@@ -1,8 +1,10 @@
 #pragma once
 #include <Block.hpp>
 #include "PerlinNoise.hpp"
-
+#include "Chunk.hpp"
 #include <vector>
+#include <bitset>
+#include <string>
 
 class TileMap {
 private:
@@ -17,6 +19,11 @@ private:
 	 int height = 10;
 	 int width = 10;
 
+	 Chunk chunks[16];
+
+	 Chunk GenerateMap(int chunkX, int chunkZ);
+
+
 public:
 
 	TileMap();
@@ -24,12 +31,13 @@ public:
 	void AddTile(Block tile, glm::vec3 position);
 
 	void Draw();
-
-	void GenerateMap();
-
 	void ReleaseData();
 
+	void CheckValidChunks(int playerX, int playerZ);
+
 	double noise(double nx, double ny);
+
+	void InitChunks();
 
 
 };

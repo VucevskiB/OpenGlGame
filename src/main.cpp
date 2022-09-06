@@ -18,6 +18,8 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 unsigned int loadTexture(char const *);
+void draw(Shader shader, Mesh mesh, GLFWwindow* window,int texture);
+
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -88,6 +90,12 @@ int main() {
   // -----------------------------
   glEnable(GL_DEPTH_TEST);
 
+  //glEnable(GL_CULL_FACE);
+  //glCullFace(GL_FRONT);
+  
+
+
+
   // build and compile our shader program
   // ------------------------------------
   std::string shader_location("../res/shaders/");
@@ -112,7 +120,7 @@ int main() {
       loadTexture((texture_location + "border.png").c_str());
 
   unsigned int containerTexture =
-      loadTexture((texture_location + "container2.png").c_str());
+      loadTexture((texture_location + "grass.png").c_str());
 
   // shader configuration
   // --------------------
@@ -139,7 +147,7 @@ int main() {
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-  tileMap.GenerateMap();
+  tileMap.InitChunks();
 
   // render loop
   // -----------
@@ -148,7 +156,10 @@ int main() {
     // --------------------
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+    if (deltaTime >= 1 / 60) {
+        lastFrame = currentFrame;
+        draw(lightingShader,cubeMesh,window, containerTexture);
+    }
 
     // input
     // -----
@@ -156,31 +167,8 @@ int main() {
 
     // render
     // ------
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // be sure to activate shader when setting uniforms/drawing objects
-    lightingShader.use();
-
-    // view/projection transformations
-    glm::mat4 projection =
-        glm::perspective(glm::radians(camera.Zoom),
-                         (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
-    glm::mat4 view = camera.GetViewMatrix();
-    lightingShader.setMat4("projection", projection);
-    lightingShader.setMat4("view", view);
-
-
-    tileMap.Draw();
-
     
 
-    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
-    // etc.)
-    // -------------------------------------------------------------------------------
-    glfwSwapBuffers(window);
-    glfwPollEvents();
   }
 
   // optional: de-allocate all resources once they've outlived their purpose:
@@ -191,6 +179,39 @@ int main() {
   // ------------------------------------------------------------------
   glfwTerminate();
   return 0;
+}
+void draw(Shader shader, Mesh mesh, GLFWwindow* window, int texture) {
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    //tileMap.CheckValidChunks(camera.Position.x, camera.Position.z);
+
+    // be sure to activate shader when setting uniforms/drawing objects
+    shader.use();
+
+    // view/projection transformations
+    glm::mat4 projection =
+        glm::perspective(glm::radians(camera.Zoom),
+            (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+    glm::mat4 view = camera.GetViewMatrix();
+    shader.setMat4("projection", projection);
+    shader.setMat4("view", view);
+
+    glBindVertexArray(mesh.VAO);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    //mesh.render(&shader);
+    tileMap.Draw();
+
+
+    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
+    // etc.)
+    // -------------------------------------------------------------------------------
+    glfwSwapBuffers(window);
+    glfwPollEvents();
+    glFlush();
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released
@@ -299,3 +320,4 @@ unsigned int loadTexture(char const *path) {
 
   return textureID;
 }
+

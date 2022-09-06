@@ -12,6 +12,7 @@
 #include <Vertex.hpp>
 #include <OBJLoader.hpp>
 #include "Mesh.hpp"
+#include <bitset>
 
 const float vertices[] = {
     // positions          // normals           // texture coords
@@ -70,6 +71,7 @@ public:
     void initVAO();
 
     void SetPosition(glm::vec3 pos);
+    void setActiveSides(std::bitset<6> sides);
 
 private:
     unsigned int texture;
@@ -77,6 +79,10 @@ private:
     Shader* shader;
 
     Mesh* cubeMesh;
+
+    std::bitset<6> sides;
+
+    Quad quad;
 
 };
 
