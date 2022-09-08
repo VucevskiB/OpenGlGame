@@ -11,6 +11,11 @@ private:
 	std::vector<Block> tiles;
 	std::vector<glm::vec3> tiles_position;
 
+
+	//TEMP
+	unsigned int texture;
+	Shader* shader;
+
 	Block block_tile;
 
 	const siv::PerlinNoise::seed_type seed = 123456u;
@@ -28,7 +33,7 @@ public:
 
 	TileMap();
 
-	void AddTile(Block tile, glm::vec3 position);
+	void AddTile(unsigned int texture, Shader& shader);
 
 	void Draw();
 	void ReleaseData();

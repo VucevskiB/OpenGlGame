@@ -80,6 +80,10 @@ Mesh::Mesh(
 		this->vertexArray[i] = vertexArray[i];
 	}
 
+	if (this->nrOfIndices > 0) {
+		std::cout << "yooo";
+	}
+
 	this->indexArray = new GLuint[this->nrOfIndices];
 	for (size_t i = 0; i < nrOfIndices; i++)
 	{
@@ -202,25 +206,36 @@ void Mesh::update()
 }
 void Mesh::render(Shader* shader)
 {
+
 	//Update uniforms
 	this->updateModelMatrix();
 	//this->updateUniforms(shader);
 
-
+	//shader->use();
 	
 	shader->setMat4("model", ModelMatrix);
-
+	
 
 	//Bind VAO
+	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+	glBindVertexArray(this->VAO);
 
 
+
+
+	glDrawArrays(GL_TRIANGLES, 0, this->nrOfVertices);
+
+	
 	//RENDER
-	if (this->nrOfIndices == 0)
-		glDrawArrays(GL_TRIANGLES, 0, this->nrOfVertices);
-	else
-		glDrawElements(GL_TRIANGLES, this->nrOfIndices, GL_UNSIGNED_INT, 0);
-
+	//if (this->nrOfIndices == 0)
+	//	glDrawArrays(GL_TRIANGLES, 0, this->nrOfVertices);
+	//else
+	//	glDrawElements(GL_TRIANGLES, this->nrOfIndices, GL_UNSIGNED_INT, 0);
+		
 	//Cleanup
 	//glActiveTexture(0);
 	//glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindVertexArray(0);
+	glBindVertexArray(0);
+
 }

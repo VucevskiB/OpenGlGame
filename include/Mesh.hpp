@@ -16,7 +16,7 @@ private:
 	Vertex* vertexArray;
 	unsigned nrOfVertices;
 	GLuint* indexArray;
-	unsigned nrOfIndices;
+	unsigned nrOfIndices = 0;
 
 	GLuint VBO;
 	GLuint EBO;

@@ -65,7 +65,7 @@ public:
 
     Block();
 
-    Block(unsigned int texture, Shader& shader, Mesh& mesh);
+    Block(std::bitset<6> sides, Shader& shader, glm::vec3 position);
     void Draw();
     void Realese();
     void initVAO();
@@ -82,7 +82,7 @@ private:
 
     std::bitset<6> sides;
 
-    Quad quad;
+    Cube cube;
 
 };
 

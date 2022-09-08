@@ -10,10 +10,11 @@
 class Primitive
 {
 private:
-	std::vector<Vertex> vertices;
-	std::vector<GLuint> indices;
 
 public:
+	std::vector<GLuint> indices;
+	std::vector<Vertex> vertices;
+
 	Primitive();
 	virtual ~Primitive();
 
@@ -52,5 +53,4 @@ class Cube : public Primitive
 {
 public:
 	Cube();
-	
 };

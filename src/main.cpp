@@ -18,7 +18,7 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 unsigned int loadTexture(char const *);
-void draw(Shader shader, Mesh mesh, GLFWwindow* window,int texture);
+void draw(Shader shader, GLFWwindow* window,int texture);
 
 
 // settings
@@ -129,20 +129,13 @@ int main() {
 
   std::vector<Vertex> mesh_data = loadOBJ("../res/models/cube_final.obj");
 
-  Quad quad = Quad();
 
-  Mesh cubeMesh = Mesh(quad.getVertices(), quad.getNrOfVertices(), quad.getIndices(), quad.getNrOfIndices(), glm::vec3(0.f, 0.f, 0.f),
-      glm::vec3(0.f),
-      glm::vec3(0.f),
-      glm::vec3(1.f));
+  //Block tile = Block(diffuseMap, lightingShader, cubeMesh);
 
-
-  Block tile = Block(diffuseMap, lightingShader, cubeMesh);
-
-  Block tile2 =  Block(containerTexture,lightingShader, cubeMesh);
+  //Block tile2 =  Block(containerTexture,lightingShader, cubeMesh);
 
   //tileMap.AddTile(tile, glm::vec3(0, 0, 0));
-  tileMap.AddTile(tile2, glm::vec3(0, 0, 0));
+  tileMap.AddTile(containerTexture, lightingShader);
 
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -158,7 +151,8 @@ int main() {
     deltaTime = currentFrame - lastFrame;
     if (deltaTime >= 1 / 60) {
         lastFrame = currentFrame;
-        draw(lightingShader,cubeMesh,window, containerTexture);
+
+        draw(lightingShader,window, containerTexture);
     }
 
     // input
@@ -180,7 +174,7 @@ int main() {
   glfwTerminate();
   return 0;
 }
-void draw(Shader shader, Mesh mesh, GLFWwindow* window, int texture) {
+void draw(Shader shader, GLFWwindow* window, int texture) {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -198,11 +192,15 @@ void draw(Shader shader, Mesh mesh, GLFWwindow* window, int texture) {
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
 
-    glBindVertexArray(mesh.VAO);
+    //glBindVertexArray(mesh.VAO);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
+
+
     //mesh.render(&shader);
+
     tileMap.Draw();
 
 
@@ -211,7 +209,7 @@ void draw(Shader shader, Mesh mesh, GLFWwindow* window, int texture) {
     // -------------------------------------------------------------------------------
     glfwSwapBuffers(window);
     glfwPollEvents();
-    glFlush();
+    //glFlush();
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released

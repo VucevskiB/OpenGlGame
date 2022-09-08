@@ -1,21 +1,70 @@
 #include <Block.hpp>
 #include "OBJ_Loader.h"
 
-Block::Block(unsigned int texture, Shader& shader,  Mesh& mesh) {
-	this->texture = texture;
+Block::Block(std::bitset<6> sides, Shader& shader,  glm::vec3 position) {
 	this->shader = &shader;
-
-	this->cubeMesh = &mesh;
+	this->Position = position;
 
 	//this->cubeMesh->move(this->Position);
-	this->cubeMesh->setOrigin(glm::vec3(1.0f, 1.0f, 1.0f));
+	//this->cubeMesh->setOrigin(glm::vec3(1.0f, 1.0f, 1.0f));
 
 
-	this->quad = Quad();
+	this->cube = Cube();
 
-	
-	
+	std::vector<Vertex> collection;
+
+	//set position
+	for (int i = 0; i < this->cube.vertices.size(); i++) {
+		this->cube.vertices[i].position += position;
+	}
+
+	//oderedi strani
+	/*
+	for (int i = 0; i < sides.size(); i++) {
+		if (!sides[i]) {
+			cube.indices.erase(cube.indices.begin() + 6 * i, cube.indices.begin() + 6 * (i + 1));
+		}
+	}
+	*/
+
+	if (!sides[4]) { // Top
+		cube.indices.erase(cube.indices.begin() + 6 * 5, cube.indices.begin() + 6 * 6);
+	}
+	if (!sides[5]) { // Bottom
+		cube.indices.erase(cube.indices.begin() + 6 * 4, cube.indices.begin() + 6 * 5);
+	}
+	if (!sides[2]) { // Right
+		cube.indices.erase(cube.indices.begin() + 6 * 3, cube.indices.begin() + 6 * 4);
+	}
+	if (!sides[1]) { // Back
+		cube.indices.erase(cube.indices.begin() + 6 * 2, cube.indices.begin() + 6 * 3);
+	}
+	if (!sides[3]) { // Left
+		cube.indices.erase(cube.indices.begin() + 6 * 1, cube.indices.begin() + 6 * 2);
+	}
+	if (!sides[0]) { // Front
+		cube.indices.erase(cube.indices.begin() + 6 * 0, cube.indices.begin() + 6 * 1);
+	}
+
+
+	//set all verticies without indicies
+	for (int i = 0; i < this->cube.indices.size(); i++) {
+		//collection.push_back(this->cube.vertices[this->cube.indices[i]]);
+		collection.push_back(Vertex(this->cube.vertices[this->cube.indices[i]]));
+	}
+
+
+
+	this->cubeMesh = new Mesh(collection.data(), collection.size(), NULL, 0, glm::vec3(0.f, 0.f, 0.f),
+		glm::vec3(0.f),
+		glm::vec3(0.f),
+		glm::vec3(1.f));
+
+
+	//this->cubeMesh->setPosition(Position);
+
 }
+/*
 void generateCube() {
 	Vertex* data = Quad().getVertices();
 
@@ -38,6 +87,7 @@ void generateCube() {
 
 	//Mesh test = Mesh(data);
 }
+*/
 
 
 Block::Block(){}
@@ -54,10 +104,13 @@ void Block::Draw() {
 
 	//shader->use();
 
-	//glBindVertexArray(this->cubeMesh->VAO);
+	
 
+	//glBindVertexBuffer(cubeMesh->VBO);
+	cubeMesh->render(shader);
+	//glBindVertexArray(0);
 
-
+	/*
 	if (sides[0]) { // Front
 		cubeMesh->setRotation(glm::vec3(0, 0, 0));
 		cubeMesh->setPosition(glm::vec3(0, 0, 0));
@@ -93,6 +146,7 @@ void Block::Draw() {
 		cubeMesh->setPosition(glm::vec3(0, -0.5, 0.5));
 		cubeMesh->render(shader);
 	}
+	*/
 
 	//glBindVertexArray(0);
 	//glUseProgram(0);

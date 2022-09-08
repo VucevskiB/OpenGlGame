@@ -4,11 +4,14 @@
 TileMap::TileMap() {
 }
 
-void TileMap::AddTile(Block tile, glm::vec3 position) {
-	tile.SetPosition(position);
-	this->tiles.push_back(tile);
+void TileMap::AddTile(unsigned int texture, Shader& shader) {
+	
+	this->texture = texture;
+	this->shader = &shader;
+	
+	//this->tiles.push_back(tile);
 
-	block_tile = tile;
+	//block_tile = tile;
 }
 
 //void TileMap::UpdateChunkData() {
@@ -55,52 +58,7 @@ void TileMap::Draw() {
 			continue;
 		}
 
-		for (int x = 0; x < Chunk::LIMIT; x++) {
-			for (int z = 0; z < Chunk::LIMIT; z++) {
-				for (int y = 0; y < Chunk::LIMIT; y++) {
-
-					if (chunk.getData(x, y, z) == 0) {
-						continue;
-					}
-
-					//get soroundings
-					std::bitset<6> sides;
-					sides.set();
-
-					if (chunk.getData(x, y, z + 1) != 0) {
-						sides.reset(0);
-					}
-
-					if (chunk.getData(x, y, z - 1) != 0) {
-						sides.reset(1);
-					}
-
-					if (chunk.getData(x + 1, y, z) != 0) {
-						sides.reset(2);
-					}
-					if (chunk.getData(x - 1, y, z) != 0) {
-						sides.reset(3);
-					}
-					if (chunk.getData(x, y + 1, z) != 0) {
-						sides.reset(4);
-					}
-					if (chunk.getData(x, y - 1, z) != 0) {
-						sides.reset(5);
-					}
-
-					
-						block_tile.setActiveSides(sides);
-
-						glm::vec3 position = glm::vec3(x + chunk.getStartX(), y, z + chunk.getStartZ());
-
-						block_tile.SetPosition(position);
-
-						//if (i == 0 && x == 0 && y == 0 && z == 0) {
-							block_tile.Draw();
-						//}
-				}
-			}
-		}
+		chunk.Draw();
 	}
 	
 }
@@ -175,7 +133,7 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 		data.push_back(line);
 	}
 
-	return Chunk(data, chunkX, chunkZ);
+	return Chunk(data, chunkX, chunkZ, *shader);
 	//std::cout << value;
 	
 }
