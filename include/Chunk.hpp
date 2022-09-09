@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <Block.hpp>
+#include "BlockData.hpp"
 
 class Chunk {
 private:
