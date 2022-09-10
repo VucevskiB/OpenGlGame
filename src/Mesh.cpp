@@ -3,7 +3,10 @@
 void Mesh::initVAO()
 {
 	//Create VAO
-	glCreateVertexArrays(1, &this->VAO);
+	if (VAO == 0) {
+		glCreateVertexArrays(1, &this->VAO);
+	}
+
 	glBindVertexArray(this->VAO);
 
 	//GEN VBO AND BIND AND SEND DATA
@@ -51,9 +54,6 @@ void Mesh::updateModelMatrix()
 	this->ModelMatrix = glm::rotate(this->ModelMatrix, glm::radians(this->rotation.z), glm::vec3(0.f, 0.f, 1.f));
 	this->ModelMatrix = glm::translate(this->ModelMatrix, this->position);
 	this->ModelMatrix = glm::scale(this->ModelMatrix, this->scale);
-}
-Mesh::Mesh() {
-
 }
 
 Mesh::Mesh(
@@ -151,16 +151,18 @@ Mesh::Mesh(const Mesh& obj)
 	this->updateModelMatrix();
 }
 Mesh::~Mesh() {
-	glDeleteVertexArrays(1, &this->VAO);
-	glDeleteBuffers(1, &this->VBO);
+	//glDeleteVertexArrays(1, &this->VAO);
+	if (this != NULL && VBO != 0) {
+		glDeleteBuffers(1, &this->VBO);
 
-	if (this->nrOfIndices > 0)
-	{
-		glDeleteBuffers(1, &this->EBO);
+		if (this->nrOfIndices > 0)
+		{
+			glDeleteBuffers(1, &this->EBO);
+		}
 	}
 
-	//delete[] this->vertexArray;
-	//delete[] this->indexArray;
+	delete[] this->vertexArray;
+	delete[] this->indexArray;
 }
 
 void Mesh::setPosition(const glm::vec3 position)
@@ -218,8 +220,17 @@ void Mesh::render(Shader* shader)
 
 	//Bind VAO
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-	glBindVertexArray(this->VAO);
+	//glBindVertexArray(this->VAO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
 
+	//Color
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+
+	//Texcoord
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
+
+	//Normal
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
 
 
 
@@ -236,6 +247,6 @@ void Mesh::render(Shader* shader)
 	//glActiveTexture(0);
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	//glBindVertexArray(0);
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 
 }

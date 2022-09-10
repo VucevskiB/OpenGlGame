@@ -21,10 +21,10 @@ private:
 	const siv::PerlinNoise::seed_type seed = 123456u;
 	const siv::PerlinNoise perlin{ seed };
 
-	 int height = 10;
+	int height = 10;
 	 int width = 10;
 
-	 Chunk chunks[25];
+	 std::vector<Chunk> chunks;
 
 	 std::vector<Chunk> generatedChunks;
 

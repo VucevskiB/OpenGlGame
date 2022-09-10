@@ -3,6 +3,7 @@
 #include <vector>
 #include <Block.hpp>
 #include "BlockData.hpp"
+#include <thread>
 
 class Chunk {
 private:
@@ -13,6 +14,8 @@ private:
 	int startZ;
 	Shader* shader;
 	Mesh* mesh;
+
+	//std::thread genThread;
 
 public:
 	Chunk();
@@ -30,6 +33,8 @@ public:
 	void generateBlocks();
 
 	void Draw();
+
+	void DeleteMesh();
 
 	static const int LIMIT = 16;
 };

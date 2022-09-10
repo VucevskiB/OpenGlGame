@@ -20,7 +20,7 @@ void TileMap::AddTile(unsigned int texture, Shader& shader) {
 
 void TileMap::Draw() {
 
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 36; i++) {
 		Chunk chunk = chunks[i];
 
 		if (chunk.isNull()) {
@@ -32,39 +32,43 @@ void TileMap::Draw() {
 	
 }
 void TileMap::InitChunks() {
-	for (int x = 0; x < 4; x++) {
-		for (int z = 0; z < 4; z++) {
-			chunks[x*4 + z] = GenerateMap(x * 16 - 32, z * 16 - 32);
+	for (int x = 0; x < 6; x++) {
+		for (int z = 0; z < 6; z++) {
+			chunks.push_back(GenerateMap(x * 16 - 48, z * 16 - 48));
 		}
 	}
 }
 
 void TileMap::CheckValidChunks(int playerX, int playerZ) {
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < 36; i++) {
 
 		if (chunks[i].isNull()) {
 			continue;
 		}
 
-		if (chunks[i].getStartX() + Chunk::LIMIT * 2 < playerX) {
+		if (chunks[i].getStartX() + Chunk::LIMIT * 3 < playerX) {
 			//delete
-			chunks[i] = GenerateMap(chunks[i].getStartX() + Chunk::LIMIT * 4, chunks[i].getStartZ());
-			continue;
+			chunks[i].DeleteMesh();
+			chunks[i] = GenerateMap(chunks[i].getStartX() + Chunk::LIMIT * 6, chunks[i].getStartZ());
+			break;
 		}
-		if (chunks[i].getStartX() - Chunk::LIMIT*2  > playerX) {
+		if (chunks[i].getStartX() - Chunk::LIMIT*3  > playerX) {
 			//delete
-			chunks[i] = GenerateMap(chunks[i].getStartX() - Chunk::LIMIT * 4, chunks[i].getStartZ());
-			continue;
+			chunks[i].DeleteMesh();
+			chunks[i] = GenerateMap(chunks[i].getStartX() - Chunk::LIMIT * 6, chunks[i].getStartZ());
+			break;
 		}
-		if (chunks[i].getStartZ() + Chunk::LIMIT * 2 < playerZ) {
+		if (chunks[i].getStartZ() + Chunk::LIMIT * 3 < playerZ) {
 			//delete
-			chunks[i] = GenerateMap(chunks[i].getStartX(), chunks[i].getStartZ() + Chunk::LIMIT * 4);
-			continue;
+			chunks[i].DeleteMesh();
+			chunks[i] = GenerateMap(chunks[i].getStartX(), chunks[i].getStartZ() + Chunk::LIMIT * 6);
+			break;
 		}
-		if (chunks[i].getStartZ() - Chunk::LIMIT * 2 > playerZ) {
+		if (chunks[i].getStartZ() - Chunk::LIMIT * 3 > playerZ) {
 			//delete
-			chunks[i] = GenerateMap(chunks[i].getStartX(), chunks[i].getStartZ() - Chunk::LIMIT * 4);
-			continue;
+			chunks[i].DeleteMesh();
+			chunks[i] = GenerateMap(chunks[i].getStartX(), chunks[i].getStartZ() - Chunk::LIMIT * 6);
+			break;
 		}
 
 	}
@@ -88,7 +92,7 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 			double  e1 = 0.5 * ridgenoise(2 * nx, 2 * ny) * e0;
 			double e2 = 0.25 * ridgenoise(4 * nx, 4 * ny) * (e0 + e1);
 			double e = (e0 + e1 + e2) / (1 + 0.5 + 0.25);
-			e = std::pow(e, 4);
+			e = std::pow(e, 3);
 			value[y][x] = std::round(e * 20) / 20.0f;
 
 			//value[y][x] = std::round(noise(nx ,ny ) * 10); // this value is height
@@ -118,10 +122,10 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 double TileMap::noise(double nx, double ny) { // if using libnoise
   // Rescale from -1.0:+1.0 to 0.0:1.0
 
-	return perlin.noise2D_01(nx, ny) / 2;
+	return perlin.noise2D_01(nx, ny) ;
 }
 double TileMap::ridgenoise(double nx, double ny) {
-	return 2 * (std::abs(perlin.noise2D_01(nx, ny)));
+	return 2 * (std::abs(perlin.noise2D_01(nx, ny)) );
 }
 
 void TileMap::ReleaseData() {

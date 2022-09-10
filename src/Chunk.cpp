@@ -6,16 +6,18 @@ Chunk::Chunk(std::vector< std::vector< std::vector<int> > > data, int startX, in
 	this->startZ = startZ;
 	this->shader = &shader;
 
-	generateBlocks();
+	//genThread = std::thread([this] { this->generateBlocks(); });
+
+	this->generateBlocks();
 }
+
 void Chunk::generateBlocks() {
 	std::vector<Vertex> chunk_data;
 
 	for (int x = 0; x < Chunk::LIMIT; x++) {
-		std::vector< std::vector<Block> > line;
+
 
 		for (int z = 0; z < Chunk::LIMIT; z++) {
-			std::vector<Block> column;
 
 
 			for (int y = 0; y < Chunk::LIMIT * 2; y++) {
@@ -63,6 +65,9 @@ void Chunk::generateBlocks() {
 				else {
 					blockType = DIRT;
 				}
+				if ((getData(x, y + 2, z) != 0) || y > 10) {
+					blockType = STONE;
+				}
 
 				std::vector<Vertex> data = BlockData::getBlockData(sides, position, blockType);
 
@@ -75,6 +80,7 @@ void Chunk::generateBlocks() {
 
 	}
 
+	//genThread.join();
 	this->mesh = new Mesh(chunk_data.data(), chunk_data.size(), NULL, 0, glm::vec3(0.f, 0.f, 0.f),
 		glm::vec3(0.f),
 		glm::vec3(0.f),
@@ -126,6 +132,10 @@ Chunk::Chunk(){
 }
 Chunk::~Chunk() {
 	data.clear();
+
+	if (mesh != NULL) {
+		//mesh->~Mesh();
+	}
 }
 
 int Chunk::getData(int x, int y, int z) {
@@ -149,19 +159,12 @@ int Chunk::getStartZ() {
 
 void Chunk::Draw() {
 
-	mesh->render(shader);
+	if (mesh != NULL) {
+		mesh->render(shader);
+	}
 
 	return;
-	for (int x = 0; x < blocks.size(); x++) {
-		
-		for (int z = 0; z < blocks[x].size(); z++) {
-		
-			for (int y = 0; y < blocks[x][z].size(); y++) {
-
-					blocks[x][z][y].Draw();
-
-			}
-		}
-
-	}
+}
+void Chunk::DeleteMesh() {
+	mesh->~Mesh();
 }

@@ -142,6 +142,8 @@ int main() {
 
   tileMap.InitChunks();
 
+
+
   // render loop
   // -----------
   while (!glfwWindowShouldClose(window)) {
@@ -153,6 +155,8 @@ int main() {
         lastFrame = currentFrame;
 
         tileMap.CheckValidChunks(camera.Position.x, camera.Position.z);
+
+        glBindVertexArray(Mesh::VAO);
 
         draw(lightingShader,window, textureAtlas);
     }

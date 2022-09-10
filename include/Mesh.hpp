@@ -36,7 +36,7 @@ private:
 	void updateModelMatrix();
 
 public:
-	GLuint VAO;
+	inline static GLuint VAO;
 
 
 	Mesh();
