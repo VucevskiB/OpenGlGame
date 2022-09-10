@@ -24,7 +24,9 @@ private:
 	 int height = 10;
 	 int width = 10;
 
-	 Chunk chunks[16];
+	 Chunk chunks[25];
+
+	 std::vector<Chunk> generatedChunks;
 
 	 Chunk GenerateMap(int chunkX, int chunkZ);
 
@@ -43,6 +45,8 @@ public:
 	double noise(double nx, double ny);
 
 	void InitChunks();
+
+	double ridgenoise(double nx, double ny);
 
 
 };

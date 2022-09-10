@@ -19,38 +19,7 @@ void TileMap::AddTile(unsigned int texture, Shader& shader) {
 //}
 
 void TileMap::Draw() {
-	/*
-	std::bitset<6> sides;
-	sides.set();
 
-	sides.reset(0);
-	block_tile.setActiveSides(sides);
-	block_tile.SetPosition(glm::vec3(1.0f,1.0f,1.0f));
-	block_tile.Draw();
-
-	sides.set();
-
-	sides.reset(1);
-	block_tile.setActiveSides(sides);
-	block_tile.SetPosition(glm::vec3(1.0f, 1.0f, 3.0f));
-	block_tile.Draw();
-	
-	for (int i = 0; i < tiles_position.size(); i++) {
-		for (int j = 0; j < 10; j++) {
-			glm::vec3 pos = tiles_position[i];
-			pos.y -= j*2;
-			if (pos.y < -5) {
-				break;
-			}
-
-			block_tile.SetPosition(pos);
-			block_tile.Draw();
-		}
-		
-	}
-	*/
-
-	
 	for (int i = 0; i < 16; i++) {
 		Chunk chunk = chunks[i];
 
@@ -82,7 +51,7 @@ void TileMap::CheckValidChunks(int playerX, int playerZ) {
 			chunks[i] = GenerateMap(chunks[i].getStartX() + Chunk::LIMIT * 4, chunks[i].getStartZ());
 			continue;
 		}
-		if (chunks[i].getStartX() - Chunk::LIMIT  > playerX) {
+		if (chunks[i].getStartX() - Chunk::LIMIT*2  > playerX) {
 			//delete
 			chunks[i] = GenerateMap(chunks[i].getStartX() - Chunk::LIMIT * 4, chunks[i].getStartZ());
 			continue;
@@ -92,7 +61,7 @@ void TileMap::CheckValidChunks(int playerX, int playerZ) {
 			chunks[i] = GenerateMap(chunks[i].getStartX(), chunks[i].getStartZ() + Chunk::LIMIT * 4);
 			continue;
 		}
-		if (chunks[i].getStartZ() - Chunk::LIMIT > playerZ) {
+		if (chunks[i].getStartZ() - Chunk::LIMIT * 2 > playerZ) {
 			//delete
 			chunks[i] = GenerateMap(chunks[i].getStartX(), chunks[i].getStartZ() - Chunk::LIMIT * 4);
 			continue;
@@ -111,15 +80,23 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 		std::vector< std::vector<int> > line;
 
 		for (int x = 0; x < Chunk::LIMIT; x++) {
-			double nx = (double)x / 16.0,
-				ny = (double)y / 16.0;
 
-			value[y][x] = std::round(noise(nx + chunkX/ Chunk::LIMIT, ny + chunkZ/Chunk::LIMIT) * 10); // this value is height
+			double nx = (double)(x + (double)chunkZ ) / 16.0f,
+				ny = (double)(y + (double)chunkX ) / 16.0f;
+
+			double e0 = 1 * ridgenoise(1 * nx, 1 * ny);
+			double  e1 = 0.5 * ridgenoise(2 * nx, 2 * ny) * e0;
+			double e2 = 0.25 * ridgenoise(4 * nx, 4 * ny) * (e0 + e1);
+			double e = (e0 + e1 + e2) / (1 + 0.5 + 0.25);
+			e = std::pow(e, 4);
+			value[y][x] = std::round(e * 20) / 20.0f;
+
+			//value[y][x] = std::round(noise(nx ,ny ) * 10); // this value is height
 
 			//tiles_position.push_back(glm::vec3(x*2, value[y][x]*2 ,y * 2));
 
 			std::vector<int> column;
-			for (int i = 0; i < 16; i++) {
+			for (int i = 0; i < 32; i++) {
 				if (i < value[y][x])
 					column.push_back(1);
 				else
@@ -140,7 +117,11 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 
 double TileMap::noise(double nx, double ny) { // if using libnoise
   // Rescale from -1.0:+1.0 to 0.0:1.0
-	return perlin.octave2D_01(nx, ny,4);
+
+	return perlin.noise2D_01(nx, ny) / 2;
+}
+double TileMap::ridgenoise(double nx, double ny) {
+	return 2 * (std::abs(perlin.noise2D_01(nx, ny)));
 }
 
 void TileMap::ReleaseData() {

@@ -18,7 +18,7 @@ void Chunk::generateBlocks() {
 			std::vector<Block> column;
 
 
-			for (int y = 0; y < Chunk::LIMIT; y++) {
+			for (int y = 0; y < Chunk::LIMIT * 2; y++) {
 
 				if (getData(x, y, z) == 0) {
 					continue;
@@ -54,7 +54,17 @@ void Chunk::generateBlocks() {
 				//Block block = Block(sides, *shader, position);
 
 				//column.push_back(block);
-				std::vector<Vertex> data = getBlockData(sides, position);
+
+				//std::vector<Vertex> data = getBlockData(sides, position);
+				BLOCK_TYPE blockType;
+				if (sides[4]) {
+					blockType = GRASS;
+				}
+				else {
+					blockType = DIRT;
+				}
+
+				std::vector<Vertex> data = BlockData::getBlockData(sides, position, blockType);
 
 				chunk_data.insert(chunk_data.end(), data.begin(), data.end());
 

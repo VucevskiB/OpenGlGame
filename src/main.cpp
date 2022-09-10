@@ -119,8 +119,8 @@ int main() {
   unsigned int diffuseMap =
       loadTexture((texture_location + "border.png").c_str());
 
-  unsigned int containerTexture =
-      loadTexture((texture_location + "grass.png").c_str());
+  unsigned int textureAtlas =
+      loadTexture((texture_location + "textureAtlass.png").c_str());
 
   // shader configuration
   // --------------------
@@ -135,7 +135,7 @@ int main() {
   //Block tile2 =  Block(containerTexture,lightingShader, cubeMesh);
 
   //tileMap.AddTile(tile, glm::vec3(0, 0, 0));
-  tileMap.AddTile(containerTexture, lightingShader);
+  tileMap.AddTile(textureAtlas, lightingShader);
 
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -152,7 +152,9 @@ int main() {
     if (deltaTime >= 1 / 60) {
         lastFrame = currentFrame;
 
-        draw(lightingShader,window, containerTexture);
+        tileMap.CheckValidChunks(camera.Position.x, camera.Position.z);
+
+        draw(lightingShader,window, textureAtlas);
     }
 
     // input
@@ -302,12 +304,12 @@ unsigned int loadTexture(char const *path) {
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
                  GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
-
+     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    //GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     stbi_image_free(data);
   } else {
