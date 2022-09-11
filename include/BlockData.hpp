@@ -7,7 +7,8 @@
 enum BLOCK_TYPE {
 	GRASS,
 	DIRT,
-	STONE
+	STONE,
+	WATER
 };
 
 static class BlockData {
@@ -22,6 +23,10 @@ public:
 		//set position
 		for (int i = 0; i < cube.vertices.size(); i++) {
 			cube.vertices[i].position += position;
+
+			if (blockType == WATER) {
+				cube.vertices[i].position -= glm::vec3(0, 0.2f, 0);
+			}
 		}
 
 		int x = blockType % 8, y = blockType / 8;
@@ -36,6 +41,10 @@ public:
 			texCord.y = ((y + texCord.y) * spriteWidth) / sheetWidth;
 
 			cube.vertices[i].texcoord = texCord;
+		}
+		if (blockType == WATER) {
+			sides.reset();
+			sides.set(4);
 		}
 
 		//set active sides
@@ -57,6 +66,8 @@ public:
 		if (!sides[0]) { // Front
 			cube.indices.erase(cube.indices.begin() + 6 * 0, cube.indices.begin() + 6 * 1);
 		}
+
+
 
 
 		//set all verticies without indicies

@@ -22,7 +22,7 @@ void Chunk::generateBlocks() {
 
 			for (int y = 0; y < Chunk::LIMIT * 2; y++) {
 
-				if (getData(x, y, z) == 0) {
+				if (getData(x, y, z) == 0 && y != 1) {
 					continue;
 				}
 
@@ -53,12 +53,11 @@ void Chunk::generateBlocks() {
 
 				glm::vec3 position = glm::vec3(x + getStartX(), y, z + getStartZ());
 
-				//Block block = Block(sides, *shader, position);
 
-				//column.push_back(block);
-
-				//std::vector<Vertex> data = getBlockData(sides, position);
 				BLOCK_TYPE blockType;
+				if (getData(x, y, z) == 0 && y == 1) {
+					blockType = WATER;
+				}else
 				if (sides[4]) {
 					blockType = GRASS;
 				}
@@ -74,9 +73,8 @@ void Chunk::generateBlocks() {
 				chunk_data.insert(chunk_data.end(), data.begin(), data.end());
 
 			}
-			//line.push_back(column);
 		}
-		//blocks.push_back(line);
+
 
 	}
 

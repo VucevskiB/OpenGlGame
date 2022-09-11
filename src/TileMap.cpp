@@ -93,7 +93,7 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 			double e2 = 0.25 * ridgenoise(4 * nx, 4 * ny) * (e0 + e1);
 			double e = (e0 + e1 + e2) / (1 + 0.5 + 0.25);
 			e = std::pow(e, 3);
-			value[y][x] = std::round(e * 20) / 20.0f;
+			value[y][x] = std::round(e * 20) / 20.0f + 1;
 
 			//value[y][x] = std::round(noise(nx ,ny ) * 10); // this value is height
 

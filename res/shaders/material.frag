@@ -25,6 +25,9 @@ uniform Light light;
 
 void main()
 {
+
+    FragColor = texture2D(material.diffuse, TexCoords);
+
     // ambient
     vec3 ambient = light.ambient * texture(material.diffuse, TexCoords).rgb;
 
@@ -42,10 +45,10 @@ void main()
 
     vec3 result = ambient + diffuse + specular;
 
-    FragColor = texture(material.diffuse, TexCoords);
+    
 
     if(FragColor.a < 0.1f){
-        discard;
+        //discard;
     }
 }
 
