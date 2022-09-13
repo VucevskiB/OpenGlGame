@@ -26,7 +26,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-static Camera camera(glm::vec3(0.0f, 10, 10));
+static Camera camera(glm::vec3(0.0f, 1, 0));
 static float lastX = SCR_WIDTH / 2.0f;
 static float lastY = SCR_HEIGHT / 2.0f;
 static bool firstMouse = true;
@@ -76,8 +76,7 @@ int main() {
 
   // tell GLFW to capture our mouse
   // 
-  //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   // glad: load all OpenGL function pointers
   // ---------------------------------------
@@ -103,43 +102,43 @@ int main() {
   std::string texture_location("../res/textures/");
 
   std::string material_shader("material");
-  std::string lamp_shader("lamp");
+  std::string skybox_shader("skybox");
 
   // build and compile our shader zprogram
   // ------------------------------------
-  Shader lightingShader(
+  Shader blockShader(
       shader_location + material_shader + std::string(".vert"),
       shader_location + material_shader + std::string(".frag"));
-  Shader lampShader(shader_location + lamp_shader + std::string(".vert"),
-                    shader_location + lamp_shader + std::string(".frag"));
 
-  
+  Shader skyboxShader(
+      shader_location + skybox_shader + std::string(".vert"),
+      shader_location + skybox_shader + std::string(".frag"));
+
+
   // load textures (we now use a utility function to keep the code more
   // organized)
   // -----------------------------------------------------------------------------
-  unsigned int diffuseMap =
-      loadTexture((texture_location + "border.png").c_str());
 
   unsigned int textureAtlas =
       loadTexture((texture_location + "textureAtlass.png").c_str());
 
+
+  std::vector<std::string> faces
+  {
+      texture_location + "skybox/" + "right.jpg",
+      texture_location + "skybox/"+ "left.jpg",
+      texture_location + "skybox/" + "top.jpg",
+      texture_location + "skybox/" + "bottom.jpg",
+      texture_location + "skybox/" + "front.jpg",
+      texture_location + "skybox/" + "back.jpg"
+  };
+  Skybox skybox = Skybox(faces, skyboxShader);
   // shader configuration
   // --------------------
-  lightingShader.use();
-  lightingShader.setInt("material.diffuse", 0);
+  blockShader.use();
+  blockShader.setInt("material.diffuse", 0);
 
-  std::vector<Vertex> mesh_data = loadOBJ("../res/models/cube_final.obj");
-
-
-  //Block tile = Block(diffuseMap, lightingShader, cubeMesh);
-
-  //Block tile2 =  Block(containerTexture,lightingShader, cubeMesh);
-
-  //tileMap.AddTile(tile, glm::vec3(0, 0, 0));
-  tileMap.AddTile(textureAtlas, lightingShader);
-
-
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  tileMap.AddTile(textureAtlas, blockShader);
 
   tileMap.InitChunks();
 
@@ -152,23 +151,48 @@ int main() {
     // --------------------
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
+
+    //render
     if (deltaTime >= 1 / 60) {
         lastFrame = currentFrame;
 
-        tileMap.CheckValidChunks(camera.Position.x, camera.Position.z);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glBindVertexArray(Mesh::VAO);
+        //_______________
+        //Draw Skybox
+        // view/projection transformations
+        glDepthMask(GL_FALSE);
+        skyboxShader.use();
 
-        draw(lightingShader,window, textureAtlas);
+        glm::mat4 projection =
+            glm::perspective(glm::radians(camera.Zoom),
+                (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+        //glm::mat4 view = camera.GetViewMatrix();
+        glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+        glm::mat4 model(1.0f);
+        skyboxShader.setMat4("projection", projection);
+        skyboxShader.setMat4("view", view);
+        skybox.Draw();
+
+        //___________
+        //Draw TileMap Chunks
+        draw(blockShader,window, textureAtlas); // tileMap
+
+        glUseProgram(0);
+        glBindVertexArray(0);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
+
+    //update
+    tileMap.CheckValidChunks(camera.Position.x, camera.Position.z);
 
     // input
     // -----
     processInput(window);
-
-    // render
-    // ------
-    
 
   }
 
@@ -182,12 +206,6 @@ int main() {
   return 0;
 }
 void draw(Shader shader, GLFWwindow* window, int texture) {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    //tileMap.CheckValidChunks(camera.Position.x, camera.Position.z);
-
-    // be sure to activate shader when setting uniforms/drawing objects
     shader.use();
 
     // view/projection transformations
@@ -199,14 +217,10 @@ void draw(Shader shader, GLFWwindow* window, int texture) {
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
 
-    //glBindVertexArray(mesh.VAO);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-
-
-
-    //mesh.render(&shader);
+    glBindVertexArray(Mesh::VAO);
 
     tileMap.Draw();
 
@@ -214,8 +228,6 @@ void draw(Shader shader, GLFWwindow* window, int texture) {
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
     // etc.)
     // -------------------------------------------------------------------------------
-    glfwSwapBuffers(window);
-    glfwPollEvents();
     //glFlush();
 }
 
@@ -277,15 +289,26 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
+        glm::vec3 direction = camera.Front;
 
+        glm::vec3 start = camera.Position;
+
+
+        tileMap.checkClick(start, direction,0);
         
     }
-    else {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        glm::vec3 direction = camera.Front;
+
+        glm::vec3 start = camera.Position;
+
+
+        tileMap.checkClick(start, direction, 1);
+
     }
-      
+     
 }
 
 // utility function for loading a 2D texture from file

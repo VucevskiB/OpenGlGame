@@ -48,5 +48,9 @@ public:
 
 	double ridgenoise(double nx, double ny);
 
+	void checkClick(glm::vec3 start, glm::vec3 direction, int click);
+
+	Chunk* getChunk(int x, int z);
+
 
 };

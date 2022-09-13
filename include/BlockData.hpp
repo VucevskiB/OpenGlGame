@@ -3,6 +3,7 @@
 #include "Primitives.hpp"
 #include "Vertex.hpp"
 #include <bitset>
+#include <deque>
 
 enum BLOCK_TYPE {
 	GRASS,
@@ -15,10 +16,10 @@ static class BlockData {
 private:
 
 public:
-	static std::vector<Vertex> getBlockData(std::bitset<6> sides, glm::vec3 position, BLOCK_TYPE blockType) {
+	static std::deque<Vertex> getBlockData(std::bitset<6> sides, glm::vec3 position, BLOCK_TYPE blockType) {
 		Cube cube = Cube();
 
-		std::vector<Vertex> collection;
+		std::deque<Vertex> collection;
 
 		//set position
 		for (int i = 0; i < cube.vertices.size(); i++) {
@@ -73,7 +74,13 @@ public:
 		//set all verticies without indicies
 		for (int i = 0; i < cube.indices.size(); i++) {
 			//collection.push_back(this->cube.vertices[this->cube.indices[i]]);
-			collection.push_back(Vertex(cube.vertices[cube.indices[i]]));
+			if (blockType == WATER) {
+				collection.emplace_back(Vertex(cube.vertices[cube.indices[i]]));
+
+			}
+			else {
+				collection.emplace_front(Vertex(cube.vertices[cube.indices[i]]));
+			}
 		}
 
 		return collection;

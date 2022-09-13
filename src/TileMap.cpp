@@ -101,10 +101,22 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 
 			std::vector<int> column;
 			for (int i = 0; i < 32; i++) {
-				if (i < value[y][x])
-					column.push_back(1);
-				else
-					column.push_back(0);
+				if (i < value[y][x]) {
+					if (i < value[y][x] - 2) {
+						column.push_back(3); // stone
+					}
+					else { 
+						if ((i + 1) >= value[y][x]) {
+							column.push_back(1); // grass
+						}
+						else {
+							column.push_back(2); // dirt
+						}
+					}
+				}
+				else { // empty/ water
+					column.push_back(0); // vazduh
+				}
 
 			}
 
@@ -118,6 +130,63 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 	//std::cout << value;
 	
 }
+template <typename T> int sgn(T val) {
+	return (T(0) < val) - (val < T(0));
+}
+
+void TileMap::checkClick(glm::vec3 start, glm::vec3 direction, int click) {
+	glm::vec3 ray_pos = start;
+
+	for (int i = 0; i < 10; i++) {
+		ray_pos = ray_pos + direction;
+
+
+		int x = std::round(ray_pos.x);
+		int y = std::round(ray_pos.y);
+		int z = std::round(ray_pos.z);
+
+		Chunk* chunk =  getChunk(x, z);
+
+		//chunk->getData(x, y, z);
+		int x_chunk = x - chunk->getStartX();
+		int z_chunk = z - chunk->getStartZ();
+
+		if (chunk->getData(x_chunk, y, z_chunk) != 0) {
+
+			if (click == 0) {
+				chunk->deleteBlock(x_chunk, y, z_chunk);
+				break;
+			}
+			else {
+
+				glm::vec3 before = ray_pos - direction;
+				x = std::round(before.x);
+				y = std::round(before.y);
+				z = std::round(before.z);
+
+				x_chunk = x - chunk->getStartX();
+				z_chunk = z - chunk->getStartZ();
+
+				chunk->placeBlock(x_chunk, y, z_chunk);
+				break;
+			}
+
+
+		}
+	}
+}
+
+Chunk* TileMap::getChunk(int x, int z) {
+
+	for (int i = 0; i < chunks.size(); i++) {
+		if (chunks[i].getStartX() <= x && x < chunks[i].getStartX() + 16) {
+			if (chunks[i].getStartZ() <= z && z < chunks[i].getStartZ() + 16) {
+				return &chunks[i];
+			}
+		}
+	}
+}
+
 
 double TileMap::noise(double nx, double ny) { // if using libnoise
   // Rescale from -1.0:+1.0 to 0.0:1.0

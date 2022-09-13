@@ -36,5 +36,9 @@ public:
 
 	void DeleteMesh();
 
+	void deleteBlock(int x, int y, int z);
+
+	void placeBlock(int x, int y, int z);
+
 	static const int LIMIT = 16;
 };

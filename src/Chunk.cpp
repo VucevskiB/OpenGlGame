@@ -22,7 +22,7 @@ void Chunk::generateBlocks() {
 
 			for (int y = 0; y < Chunk::LIMIT * 2; y++) {
 
-				if (getData(x, y, z) == 0 && y != 1) {
+				if (getData(x, y, z) == 0) {
 					continue;
 				}
 
@@ -55,20 +55,23 @@ void Chunk::generateBlocks() {
 
 
 				BLOCK_TYPE blockType;
-				if (getData(x, y, z) == 0 && y == 1) {
-					blockType = WATER;
-				}else
-				if (sides[4]) {
+
+				switch (getData(x, y, z))
+				{
+				case 1:
 					blockType = GRASS;
-				}
-				else {
+					break;
+				case 2:
 					blockType = DIRT;
-				}
-				if ((getData(x, y + 2, z) != 0) || y > 10) {
+					break;
+				case 3:
 					blockType = STONE;
+					break;
+				default:
+					break;
 				}
 
-				std::vector<Vertex> data = BlockData::getBlockData(sides, position, blockType);
+				std::deque<Vertex> data = BlockData::getBlockData(sides, position, blockType);
 
 				chunk_data.insert(chunk_data.end(), data.begin(), data.end());
 
@@ -165,4 +168,18 @@ void Chunk::Draw() {
 }
 void Chunk::DeleteMesh() {
 	mesh->~Mesh();
+}
+
+void Chunk::deleteBlock(int x, int y, int z) {
+	data[x][z][y] = 0;
+	DeleteMesh();
+
+	generateBlocks();
+
+}
+void Chunk::placeBlock(int x, int y, int z) {
+	data[x][z][y] = 3;
+	DeleteMesh();
+
+	generateBlocks();
 }
