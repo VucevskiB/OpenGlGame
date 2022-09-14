@@ -9,7 +9,8 @@ enum BLOCK_TYPE {
 	GRASS,
 	DIRT,
 	STONE,
-	WATER
+	WATER,
+	SAND
 };
 
 static class BlockData {

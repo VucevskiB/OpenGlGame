@@ -4,7 +4,7 @@
 TileMap::TileMap() {
 }
 
-void TileMap::AddTile(unsigned int texture, Shader& shader) {
+void TileMap::SetShader(unsigned int texture, Shader& shader) {
 	
 	this->texture = texture;
 	this->shader = &shader;
@@ -88,16 +88,14 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 			double nx = (double)(x + (double)chunkZ ) / 16.0f,
 				ny = (double)(y + (double)chunkX ) / 16.0f;
 
-			double e0 = 1 * ridgenoise(1 * nx, 1 * ny);
-			double  e1 = 0.5 * ridgenoise(2 * nx, 2 * ny) * e0;
+			double e0 = 1.2 * ridgenoise(1 * nx, 1 * ny);
+			double  e1 = 0.6 * ridgenoise(2 * nx, 2 * ny) * e0;
 			double e2 = 0.25 * ridgenoise(4 * nx, 4 * ny) * (e0 + e1);
 			double e = (e0 + e1 + e2) / (1 + 0.5 + 0.25);
 			e = std::pow(e, 3);
-			value[y][x] = std::round(e * 20) / 20.0f + 1;
 
-			//value[y][x] = std::round(noise(nx ,ny ) * 10); // this value is height
+			value[y][x] = std::round(e * 24) / 24.0f + 1;
 
-			//tiles_position.push_back(glm::vec3(x*2, value[y][x]*2 ,y * 2));
 
 			std::vector<int> column;
 			for (int i = 0; i < 32; i++) {
@@ -115,7 +113,12 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 					}
 				}
 				else { // empty/ water
-					column.push_back(0); // vazduh
+					if (i == 2) {
+						column.push_back(-1); // water
+					}
+					else {
+						column.push_back(0); // vazduh
+					}
 				}
 
 			}
@@ -130,6 +133,11 @@ Chunk TileMap::GenerateMap(int chunkX, int chunkZ) {
 	//std::cout << value;
 	
 }
+
+
+
+
+
 template <typename T> int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
 }

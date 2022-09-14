@@ -35,7 +35,7 @@ public:
 
 	TileMap();
 
-	void AddTile(unsigned int texture, Shader& shader);
+	void SetShader(unsigned int texture, Shader& shader);
 
 	void Draw();
 	void ReleaseData();

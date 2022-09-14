@@ -73,7 +73,7 @@ private:
 public:
 	Skybox(std::vector<std::string> faces, Shader& shader);
 
-	void Draw();
+	void Draw(glm::mat4 projection, glm::mat4 view);
 
 	void initVAO();
 };

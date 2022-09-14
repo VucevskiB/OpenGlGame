@@ -60,8 +60,14 @@ void Skybox::initVAO() {
 }
 
 
-void Skybox::Draw() {
+void Skybox::Draw(glm::mat4 projection, glm::mat4 view) {
 
+    glDepthMask(GL_FALSE);
+
+    skyboxShader->use();
+
+    skyboxShader->setMat4("projection", projection);
+    skyboxShader->setMat4("view", view);
 
     glBindVertexArray(VAO);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);

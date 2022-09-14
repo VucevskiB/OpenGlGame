@@ -20,7 +20,7 @@ void Chunk::generateBlocks() {
 		for (int z = 0; z < Chunk::LIMIT; z++) {
 
 
-			for (int y = 0; y < Chunk::LIMIT * 2; y++) {
+			for (int y = 0; y < 32; y++) {
 
 				if (getData(x, y, z) == 0) {
 					continue;
@@ -30,24 +30,24 @@ void Chunk::generateBlocks() {
 				std::bitset<6> sides;
 				sides.set();
 
-				if (getData(x, y, z + 1) != 0) {
+				if (getData(x, y, z + 1) > 0) {
 					sides.reset(0);
 				}
 
-				if (getData(x, y, z - 1) != 0) {
+				if (getData(x, y, z - 1) > 0) {
 					sides.reset(1);
 				}
 
-				if (getData(x + 1, y, z) != 0) {
+				if (getData(x + 1, y, z) > 0) {
 					sides.reset(2);
 				}
-				if (getData(x - 1, y, z) != 0) {
+				if (getData(x - 1, y, z) > 0) {
 					sides.reset(3);
 				}
-				if (getData(x, y + 1, z) != 0) {
+				if (getData(x, y + 1, z) > 0) {
 					sides.reset(4);
 				}
-				if (getData(x, y - 1, z) != 0) {
+				if (getData(x, y - 1, z) > 0) {
 					sides.reset(5);
 				}
 
@@ -58,6 +58,9 @@ void Chunk::generateBlocks() {
 
 				switch (getData(x, y, z))
 				{
+				case -1:
+					blockType = WATER;
+					break;
 				case 1:
 					blockType = GRASS;
 					break;
@@ -69,6 +72,29 @@ void Chunk::generateBlocks() {
 					break;
 				default:
 					break;
+				}
+
+				if (blockType == GRASS) {
+					if (getData(x, y, z + 1) == -1) {
+						blockType = SAND;
+					}
+
+					if (getData(x, y, z - 1) == -1) {
+						blockType = SAND;
+					}
+
+					if (getData(x + 1, y, z) == -1) {
+						blockType = SAND;
+					}
+					if (getData(x - 1, y, z) == -1) {
+						blockType = SAND;
+					}
+					if (getData(x, y + 1, z) == -1) {
+						blockType = SAND;
+					}
+					if (getData(x, y - 1, z) == -1) {
+						blockType = SAND;
+					}
 				}
 
 				std::deque<Vertex> data = BlockData::getBlockData(sides, position, blockType);
@@ -140,7 +166,7 @@ Chunk::~Chunk() {
 }
 
 int Chunk::getData(int x, int y, int z) {
-	if (x >= LIMIT || y >= LIMIT || z >= LIMIT || x < 0 || y < 0 || z < 0) {
+	if (x >= LIMIT || y >= 32 || z >= LIMIT || x < 0 || y < 0 || z < 0) {
 		return 0;
 	}
 

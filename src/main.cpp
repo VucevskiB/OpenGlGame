@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-const std::string program_name = ("Diffuse Map");
+const std::string program_name = ("OpenGL voxel terrain generation project");
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -101,14 +101,14 @@ int main() {
   std::string shader_location("../res/shaders/");
   std::string texture_location("../res/textures/");
 
-  std::string material_shader("material");
+  std::string block_shader("block");
   std::string skybox_shader("skybox");
 
   // build and compile our shader zprogram
   // ------------------------------------
   Shader blockShader(
-      shader_location + material_shader + std::string(".vert"),
-      shader_location + material_shader + std::string(".frag"));
+      shader_location + block_shader + std::string(".vert"),
+      shader_location + block_shader + std::string(".frag"));
 
   Shader skyboxShader(
       shader_location + skybox_shader + std::string(".vert"),
@@ -136,9 +136,9 @@ int main() {
   // shader configuration
   // --------------------
   blockShader.use();
-  blockShader.setInt("material.diffuse", 0);
+  blockShader.setInt("texture1", 0);
 
-  tileMap.AddTile(textureAtlas, blockShader);
+  tileMap.SetShader(textureAtlas, blockShader);
 
   tileMap.InitChunks();
 
@@ -162,23 +162,19 @@ int main() {
         //_______________
         //Draw Skybox
         // view/projection transformations
-        glDepthMask(GL_FALSE);
-        skyboxShader.use();
+        
 
         glm::mat4 projection =
             glm::perspective(glm::radians(camera.Zoom),
                 (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
-        //glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-        glm::mat4 model(1.0f);
-        skyboxShader.setMat4("projection", projection);
-        skyboxShader.setMat4("view", view);
-        skybox.Draw();
+
+        skybox.Draw(projection, view);
 
         //___________
         //Draw TileMap Chunks
         draw(blockShader,window, textureAtlas); // tileMap
+
 
         glUseProgram(0);
         glBindVertexArray(0);
@@ -223,12 +219,6 @@ void draw(Shader shader, GLFWwindow* window, int texture) {
     glBindVertexArray(Mesh::VAO);
 
     tileMap.Draw();
-
-
-    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved
-    // etc.)
-    // -------------------------------------------------------------------------------
-    //glFlush();
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released
