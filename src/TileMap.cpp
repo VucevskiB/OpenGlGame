@@ -196,14 +196,14 @@ Chunk* TileMap::getChunk(int x, int z) {
 }
 
 
-double TileMap::noise(double nx, double ny) { // if using libnoise
-  // Rescale from -1.0:+1.0 to 0.0:1.0
+double TileMap::noise(double nx, double ny) { 
 
 	return perlin.noise2D_01(nx, ny) ;
 }
 double TileMap::ridgenoise(double nx, double ny) {
 	return 2 * (std::abs(perlin.noise2D_01(nx, ny)) );
 }
+
 
 void TileMap::ReleaseData() {
 	for (int i = 0; i < tiles.size(); i++) {
