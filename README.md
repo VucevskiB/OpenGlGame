@@ -7,13 +7,6 @@
   <img width="auto" height="400px" src="https://i.imgur.com/aBpjVKn.jpg">
 </p>
 
-## References 
-
-<p>[1] OpenGL проект со основен код за организирање на мешови и модели - (https://github.com/Headturna/OpenGL-C---Tutorials) </p>
-<p>[2] Perlin Noise имплементација во C++ - (https://github.com/Reputeless/PerlinNoise) </p>
-<p>[3] Аудиториски вежби по Компјутерска графикa - (https://github.com/joksim/OpenGLPrj) </p>
-<p>[4] Coding Minecraft in One Week - C++/OpenGL Programming Challenge - (https://www.youtube.com/watch?v=Xq3isov6mZ8) </p>
-
 # 1. Генерирање на меш (и терен)
 
 За да го генерираме нашиот терен од воксели ќе користиме три-димензионален грид и според вредностите што ќе имаме во нашиот три-димензионален грид соодветно ќе поставиме коцки, кој ќе имаат иста големина и иста ротација. За да нацртаме обична коцка на екран е прилично едноставно.
@@ -394,5 +387,10 @@ Perlin Noise е noise функција која, на некој начин со
 	}
 Потоа од кога ќе направиме промена во делот(chunk), со тоа што сме избришале коцка или пак сме поставиле коцка, треба само одново да се изгради листата од вертекс дата, и пак да постават податоците во вертекс баферот(VBO).
 
+## References 
 
+<p>[1] OpenGL проект со основен код за организирање на мешови и модели - (https://github.com/Headturna/OpenGL-C---Tutorials) </p>
+<p>[2] Perlin Noise имплементација во C++ - (https://github.com/Reputeless/PerlinNoise) </p>
+<p>[3] Аудиториски вежби по Компјутерска графикa - (https://github.com/joksim/OpenGLPrj) </p>
+<p>[4] Coding Minecraft in One Week - C++/OpenGL Programming Challenge - (https://www.youtube.com/watch?v=Xq3isov6mZ8) </p>
 
