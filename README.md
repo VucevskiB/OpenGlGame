@@ -9,10 +9,10 @@
 
 ## References 
 
-<p>[1] [OpenGL проект со основен код за организирање на мешови и модели.](https://github.com/Headturna/OpenGL-C---Tutorials) </p>
-<p>[2] [Perlin Noise имплементација во C++](https://github.com/Reputeless/PerlinNoise) </p>
-<p>[3] [Аудиториски вежби по Компјутерска графикa](https://github.com/joksim/OpenGLPrj) </p>
-<p>[4] [Coding Minecraft in One Week - C++/OpenGL Programming Challenge](https://www.youtube.com/watch?v=Xq3isov6mZ8) </p>
+<p>[1] OpenGL проект со основен код за организирање на мешови и модели - (https://github.com/Headturna/OpenGL-C---Tutorials) </p>
+<p>[2] Perlin Noise имплементација во C++ - (https://github.com/Reputeless/PerlinNoise) </p>
+<p>[3] Аудиториски вежби по Компјутерска графикa - (https://github.com/joksim/OpenGLPrj) </p>
+<p>[4] Coding Minecraft in One Week - C++/OpenGL Programming Challenge - (https://www.youtube.com/watch?v=Xq3isov6mZ8) </p>
 
 # 1. Генерирање на меш (и терен)
 
